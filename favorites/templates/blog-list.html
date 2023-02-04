@@ -1,0 +1,60 @@
+(% extends "base.html" %}
+
+{% block content %}
+    <h1>Blog list</h1>
+
+    <h2 class="mb-3">Session key: {{ request.session.session_key }}</h2>
+
+    <div class="d-flex">
+        <a href="{% url 'favorites:list' %}" class="mr-3">Favorites page</a>
+
+        <form action="{% url 'favorites:delete' %}" method="post">{% csrf_token %}
+            <input type="hidden" name="url_from" value="{{ request.path }}">
+            <button type="submit" class="btn btn-danger"> Delete favorites from session</button>
+        </form>
+    </div>
+    <hr>
+
+    <div class="jumbotron">
+        <div>{{ request.session.keys }}</div>
+        <div>{{ favorites_list }}</div>
+         <div>{{ request.session.favorites }}</div>
+    </div>
+    <hr>
+    {% for blog_post in blog_posts %}
+        <div class="mb-4">
+            <h2><a href="{% url 'blog:details' id=blog_post.id %}">{{ blog_post.title }</a></h2>
+            <div class="row">
+                <div class="col-6">
+                    <div class="d-flex">
+                        {% include "favorites/includes/add_to_favorites.html" with type="blog" id=blog_post.id %}
+                        {% include "favorites/includes/remove_from_favorites.html" with type="blog" id=blog_post.id %}
+                    </div>
+                </div>
+                <div class="col-6"></div>
+            </div>
+        </div>
+    {% endfor %}
+    <hr>
+    <div class="mb-4">
+        <h3>Object site-1</h3>
+        <div class="d-flex">
+            {% include "favorites/includes/add_to_favorites.html" with type="object_site" id=1 %}
+            {% include "favorites/includes/remove_from_favorites.html" with type="object_site" id=1 %}
+        </div>
+    </div>
+    <div class="mb-4">
+        <h3>Object site-2</h3>
+        <div class="d-flex">
+            {% include "favorites/includes/add_to_favorites.html" with type="object_site" id=2 %}
+            {% include "favorites/includes/remove_from_favorites.html" with type="object_site" id=2 %}
+        </div>
+    </div>
+    <div class="mb-4">
+        <h3>Object site-3</h3>
+        <div class="d-flex">
+            {% include "favorites/includes/add_to_favorites.html" with type="object_site" id=3 %}
+            {% include "favorites/includes/remove_from_favorites.html" with type="object_site" id=3 %}
+        </div>
+    </div>
+{% endblock %}
